@@ -3,18 +3,21 @@ import ssl
 import os
 from dotenv import load_dotenv
 load_dotenv()
-password = os.getenv("PASSWORD")
-email = os.getenv("EMAIL")
-receiver = os.getenv("RECEIVER")
-
 def send_email(message):
     host = "smtp.gmail.com"
     port = 465
-    user = email
-    password = password
-    receiver = receiver
-    context = ssl.create_default_context()
-    with smtplib.SMTP_SSL(host, port, context=context) as server:
-        # The SMTP_SSL has multiple arguments that are in order so there is need to specify argument.
-        server.login(user, password)
-        server.sendmail(user, receiver, message)
+
+    try:
+        with smtplib.SMTP_SSL(host, port) as server:
+            server.login(email_user, email_password)
+            server.sendmail(email_user, email_receiver, message)
+        print("Email sent successfully.")
+    except Exception as e:
+        print(f"Error sending email: {e}")
+
+
+email_user = os.getenv("EMAIL")
+email_password = os.getenv("PASSWORD")
+email_receiver = os.getenv("RECEIVER")
+
+
